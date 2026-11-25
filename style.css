@@ -19,7 +19,7 @@
   --accent-ink: #161f3c;
   --halo: #26366a;
   --hero-base: #151929;
-  --hero-art: url("assets/hero-pro.webp");
+  --hero-art: url("assets/hero-unifi.webp");
   font-family: "Segoe UI", system-ui, sans-serif;
 }
 
@@ -131,11 +131,12 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   inset: 0 0 0 30%;
   background:
     var(--hero-gradient),
-    var(--hero-art) var(--hero-position) / cover no-repeat;
+    var(--hero-art) var(--hero-position) / var(--hero-size) no-repeat;
   --hero-gradient:
     linear-gradient(90deg, var(--hero-base) 0%, transparent 40%),
     linear-gradient(0deg, rgb(8 8 12 / .28), transparent 35%);
   --hero-position: center right;
+  --hero-size: cover;
 }
 
 .hero-content {
@@ -338,6 +339,13 @@ a.card:hover .arrow { transform: translate(2px, -2px); }
       linear-gradient(0deg, var(--hero-base) 0%, var(--hero-base) 22%, transparent 91%),
       linear-gradient(90deg, var(--hero-base) 0%, transparent 90%);
     --hero-position: top right;
+  }
+  :root:not([data-mode="personnel"]) .hero-art {
+    --hero-position: right -15px;
+    --hero-size: auto clamp(212px, 70vw, 280px);
+    --hero-gradient:
+      linear-gradient(180deg, transparent 20%, var(--hero-base) 65%),
+      linear-gradient(90deg, var(--hero-base), transparent 88%);
   }
   .hero-content { width: 100%; padding: 82px 23px 31px; }
   .location { font-size: .65rem; }
