@@ -34,7 +34,7 @@
   --accent-ink: #372019;
   --halo: #593220;
   --hero-base: #211715;
-  --hero-art: url("assets/hero-creation.webp");
+  --hero-art: url("assets/hero-montreal.webp");
 }
 
 *, *::before, *::after { box-sizing: border-box; }
