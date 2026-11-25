@@ -8,16 +8,22 @@
   <title>Laurent Bouriez — DevOps, projets et liens personnels</title>
   <link rel="icon" href="assets/logo/weeboo-owl-144.png" type="image/png">
   <link rel="preload" href="assets/bricolage-grotesque.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
   <script src="site.js?v=5" defer></script>
+  <script src="seasonal-owl.js?v=1" defer></script>
+  <script>
+    document.documentElement.classList.add("owl-loading");
+    setTimeout(() => document.documentElement.classList.remove("owl-loading"), 1600);
+  </script>
 </head>
 <body>
   <div class="shell">
     <header class="topbar">
-      <div class="identity">
-        <img src="assets/logo/weeboo-owl-96.webp" alt="" width="36" height="36">
+      <button class="identity" id="owl-trigger" type="button" aria-haspopup="dialog"
+        aria-controls="owl-dialog" aria-label="@lbouriez — Voir la chouette en grand" disabled>
+        <span class="identity-avatar"><img src="assets/logo/weeboo-owl-96.webp" alt="" width="36" height="36" fetchpriority="low"></span>
         <span>@lbouriez</span>
-      </div>
+      </button>
       <nav class="switcher" aria-label="Choisir un volet">
         <a href="#panel-pro" class="mode" data-mode="pro">
           <span class="mode-icon" aria-hidden="true">⌘</span> Pro
@@ -153,5 +159,12 @@
 
     <span id="new-tab-notice" hidden>S’ouvre dans un nouvel onglet.</span>
   </div>
+  <dialog class="owl-dialog" id="owl-dialog" aria-label="La chouette en grand">
+    <div class="owl-shade" aria-hidden="true"></div>
+    <div class="owl-stage" role="img" aria-label="Chouette WeeBoo">
+      <div class="owl-canvas" aria-hidden="true"></div>
+    </div>
+    <button class="owl-close" type="button" aria-label="Fermer la vue de la chouette" autofocus>✕</button>
+  </dialog>
 </body>
 </html>
