@@ -9,7 +9,10 @@ const personalHashes = new Set(["#personnel", "#panel-personnel", "#creation", "
 const swipeSurface = document.querySelector("main");
 const swipeMinDistance = 60;
 const swipeEdgeInset = 24;
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let swipeStart;
+let pageTurn;
+let pageSlide;
 
 function selectTab(activeTab) {
   const focused = document.activeElement;
@@ -34,7 +37,7 @@ function selectTab(activeTab) {
   }
 }
 
-function navigateToTab(tab) {
+function updateTabLocation(tab) {
   selectTab(tab);
 
   const nextUrl = new URL(location.href);
@@ -44,7 +47,54 @@ function navigateToTab(tab) {
   }
 }
 
+function stopPageTurn() {
+  if (pageTurn) {
+    pageTurn.skipTransition();
+    pageTurn = undefined;
+    delete document.documentElement.dataset.pageTurn;
+  }
+  if (pageSlide) {
+    pageSlide.cancel();
+    pageSlide = undefined;
+  }
+}
+
+function navigateToTab(tab, direction) {
+  stopPageTurn();
+  if (!direction || reducedMotion.matches) {
+    updateTabLocation(tab);
+    return;
+  }
+
+  if (!document.startViewTransition) {
+    updateTabLocation(tab);
+    const offset = direction === "left" ? 12 : -12;
+    pageSlide = swipeSurface.animate?.(
+      [{ transform: `translateX(${offset}px)`, opacity: 0.82 }, { transform: "none", opacity: 1 }],
+      { duration: 240, easing: "ease-out" },
+    );
+    return;
+  }
+
+  const root = document.documentElement;
+  root.dataset.pageTurn = direction;
+  const transition = document.startViewTransition(() => {
+    if (pageTurn === transition) updateTabLocation(tab);
+  });
+  pageTurn = transition;
+
+  const clearPageTurn = () => {
+    if (pageTurn !== transition) return;
+    pageTurn = undefined;
+    delete root.dataset.pageTurn;
+  };
+  // The browser can skip capturing the animation while still updating the tab.
+  transition.ready.catch(() => {});
+  transition.finished.then(clearPageTurn, clearPageTurn);
+}
+
 function syncFromLocation() {
+  stopPageTurn();
   const mode = personalHashes.has(location.hash) ? "personnel" : "pro";
   selectTab(tabs.find((tab) => tab.mode === mode));
 }
@@ -110,9 +160,15 @@ document.addEventListener("pointerup", (event) => {
 
   const mode = deltaX < 0 ? "personnel" : "pro";
   if (mode !== document.documentElement.dataset.mode) {
-    navigateToTab(tabs.find((tab) => tab.mode === mode));
+    navigateToTab(tabs.find((tab) => tab.mode === mode), deltaX < 0 ? "left" : "right");
   }
 }, { passive: true });
 
+reducedMotion.addEventListener?.("change", () => {
+  if (!reducedMotion.matches) return;
+  // Finish any pending state update while skipping the visual effect.
+  pageTurn?.skipTransition();
+  pageSlide?.cancel();
+});
 window.addEventListener("hashchange", syncFromLocation);
 syncFromLocation();

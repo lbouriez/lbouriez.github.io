@@ -377,6 +377,63 @@ a.card:hover .arrow { transform: translate(2px, -2px); }
   .topbar { padding-block: 8px; }
 }
 
+@supports (view-transition-name: portfolio-page) {
+  :root[data-page-turn] { view-transition-name: none; }
+
+  :root[data-page-turn="left"] {
+    --page-hinge: left;
+    --page-angle: -85deg;
+    --page-reveal-offset: 12px;
+    --page-shadow-offset: 12px;
+  }
+
+  :root[data-page-turn="right"] {
+    --page-hinge: right;
+    --page-angle: 85deg;
+    --page-reveal-offset: -12px;
+    --page-shadow-offset: -12px;
+  }
+
+  :root[data-page-turn] main {
+    view-transition-name: portfolio-page;
+    background: linear-gradient(transparent, var(--background) 220px);
+    border-radius: 21px;
+  }
+  :root[data-page-turn]::view-transition { pointer-events: none; }
+  :root[data-page-turn]::view-transition-group(portfolio-page) { animation: none; }
+
+  :root[data-page-turn]::view-transition-new(portfolio-page) {
+    animation: page-reveal 420ms ease-out both;
+    mix-blend-mode: normal;
+  }
+
+  :root[data-page-turn]::view-transition-old(portfolio-page) {
+    z-index: 1;
+    animation: page-fold 420ms cubic-bezier(.36, .05, .28, 1) both;
+    mix-blend-mode: normal;
+    transform-origin: var(--page-hinge) top;
+  }
+
+  @keyframes page-fold {
+    0% {
+      transform: perspective(1300px) rotateY(0deg);
+      filter: brightness(1) drop-shadow(0 0 0 transparent);
+      opacity: 1;
+    }
+    75% { opacity: 1; }
+    100% {
+      transform: perspective(1300px) rotateY(var(--page-angle));
+      filter: brightness(.73) drop-shadow(var(--page-shadow-offset) 4px 16px #0009);
+      opacity: 0;
+    }
+  }
+
+  @keyframes page-reveal {
+    from { transform: translateX(var(--page-reveal-offset)); opacity: .78; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; }
 }
