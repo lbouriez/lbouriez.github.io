@@ -61,6 +61,10 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   padding-bottom: 48px;
 }
 
+@media (any-pointer: coarse) {
+  main { touch-action: pan-y pinch-zoom; }
+}
+
 .topbar {
   display: flex;
   flex-wrap: wrap;

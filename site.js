@@ -4,10 +4,18 @@ const tabs = Array.from(switcher.querySelectorAll("[data-mode]"), (link) => ({
   mode: link.dataset.mode,
   panel: document.getElementById(link.hash.slice(1)),
 }));
-const introductions = document.querySelectorAll("[data-intro]");
+const introductions = Array.from(document.querySelectorAll("[data-intro]"));
 const personalHashes = new Set(["#personnel", "#panel-personnel", "#creation", "#panel-creation"]);
+const swipeSurface = document.querySelector("main");
+const swipeMinDistance = 60;
+const swipeEdgeInset = 24;
+let swipeStart;
 
 function selectTab(activeTab) {
+  const focused = document.activeElement;
+  const focusWillBeHidden = tabs.some((tab) => tab !== activeTab && tab.panel.contains(focused)) ||
+    introductions.some((intro) => intro.dataset.intro !== activeTab.mode && intro.contains(focused));
+
   document.documentElement.dataset.mode = activeTab.mode;
 
   for (const tab of tabs) {
@@ -19,6 +27,10 @@ function selectTab(activeTab) {
 
   for (const intro of introductions) {
     intro.setAttribute("aria-hidden", String(intro.dataset.intro !== activeTab.mode));
+  }
+
+  if (focused !== activeTab.link && (switcher.contains(focused) || focusWillBeHidden)) {
+    activeTab.link.focus({ preventScroll: true });
   }
 }
 
@@ -34,14 +46,7 @@ function navigateToTab(tab) {
 
 function syncFromLocation() {
   const mode = personalHashes.has(location.hash) ? "personnel" : "pro";
-  const tab = tabs.find((item) => item.mode === mode);
-  const focused = document.activeElement;
-  const focusWillBeHidden = tabs.some((item) => item !== tab && item.panel.contains(focused));
-  selectTab(tab);
-
-  if (switcher.contains(focused) || focusWillBeHidden) {
-    tab.link.focus({ preventScroll: true });
-  }
+  selectTab(tabs.find((tab) => tab.mode === mode));
 }
 
 switcher.setAttribute("role", "tablist");
@@ -78,10 +83,36 @@ switcher.addEventListener("keydown", (event) => {
   if (destinationIndex === undefined) return;
 
   event.preventDefault();
-  const destination = tabs[destinationIndex];
-  destination.link.focus({ preventScroll: true });
-  navigateToTab(destination);
+  navigateToTab(tabs[destinationIndex]);
 });
+
+document.addEventListener("pointerdown", (event) => {
+  if (event.pointerType !== "touch") return;
+  swipeStart = undefined;
+  if (!event.isPrimary || !swipeSurface.contains(event.target)) return;
+  if (event.clientX < swipeEdgeInset || event.clientX > window.innerWidth - swipeEdgeInset) return;
+  if (window.visualViewport?.scale > 1) return;
+
+  swipeStart = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
+}, { passive: true });
+
+document.addEventListener("pointercancel", (event) => {
+  if (event.pointerId === swipeStart?.pointerId) swipeStart = undefined;
+}, { passive: true });
+
+document.addEventListener("pointerup", (event) => {
+  if (event.pointerId !== swipeStart?.pointerId) return;
+
+  const deltaX = event.clientX - swipeStart.x;
+  const deltaY = event.clientY - swipeStart.y;
+  swipeStart = undefined;
+  if (Math.abs(deltaX) < swipeMinDistance || Math.abs(deltaX) < 1.5 * Math.abs(deltaY)) return;
+
+  const mode = deltaX < 0 ? "personnel" : "pro";
+  if (mode !== document.documentElement.dataset.mode) {
+    navigateToTab(tabs.find((tab) => tab.mode === mode));
+  }
+}, { passive: true });
 
 window.addEventListener("hashchange", syncFromLocation);
 syncFromLocation();
