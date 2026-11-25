@@ -94,8 +94,8 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 .identity-avatar {
   display: block;
-  width: 36px;
-  height: 36px;
+  width: 56px;
+  height: 56px;
   flex: none;
 }
 
@@ -413,7 +413,7 @@ a.card:hover .arrow { transform: translate(2px, -2px); }
 @media (max-width: 560px) {
   .shell { width: calc(100% - 32px); padding-bottom: 32px; }
   .topbar { min-height: 72px; }
-  .identity-avatar { width: 31px; height: 31px; }
+  .identity-avatar { width: 48px; height: 48px; }
   .identity { gap: 7px; font-size: .78rem; }
   .mode { gap: 5px; min-width: auto; min-height: 44px; padding: 0 11px; font-size: .8rem; }
   .mode-icon { font-size: .9rem; }
@@ -443,6 +443,11 @@ a.card:hover .arrow { transform: translate(2px, -2px); }
   .cards + h2 { margin-top: 21px; }
   .card { min-height: 70px; padding: 12px; gap: 12px; }
   .card--project { min-height: 82px; }
+}
+
+@media (max-width: 340px) {
+  .topbar { column-gap: 8px; }
+  .mode { padding-inline: 8px; }
 }
 
 @media (max-width: 320px) {
