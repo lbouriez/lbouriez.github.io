@@ -19,7 +19,8 @@
   --accent-ink: #161f3c;
   --halo: #26366a;
   --hero-base: #151929;
-  --hero-art: url("assets/hero-unifi.webp");
+  --hero-webp: url("assets/hero-unifi.webp");
+  --hero-avif: url("assets/hero-unifi.avif");
   font-family: "Segoe UI", system-ui, sans-serif;
 }
 
@@ -34,13 +35,13 @@
   --accent-ink: #372019;
   --halo: #593220;
   --hero-base: #211715;
-  --hero-art: url("assets/hero-montreal.webp");
+  --hero-webp: url("assets/hero-montreal.webp");
+  --hero-avif: url("assets/hero-montreal.avif");
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
-  min-width: 280px;
   min-height: 100vh;
   margin: 0;
   background: radial-gradient(ellipse 840px 440px at 87% -100px, var(--halo), transparent 77%), var(--background);
@@ -62,6 +63,7 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
 
 .topbar {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
@@ -137,6 +139,13 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
     linear-gradient(0deg, rgb(8 8 12 / .28), transparent 35%);
   --hero-position: center right;
   --hero-size: cover;
+  --hero-art: var(--hero-webp);
+}
+
+@supports (background-image: image-set(url("data:,") type("image/avif"))) {
+  .hero-art {
+    --hero-art: image-set(var(--hero-avif) type("image/avif"), var(--hero-webp) type("image/webp"));
+  }
 }
 
 .hero-content {
@@ -358,6 +367,10 @@ a.card:hover .arrow { transform: translate(2px, -2px); }
   .cards + h2 { margin-top: 21px; }
   .card { min-height: 70px; padding: 12px; gap: 12px; }
   .card--project { min-height: 82px; }
+}
+
+@media (max-width: 320px) {
+  .topbar { padding-block: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

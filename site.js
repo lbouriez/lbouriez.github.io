@@ -35,9 +35,11 @@ function navigateToTab(tab) {
 function syncFromLocation() {
   const mode = personalHashes.has(location.hash) ? "personnel" : "pro";
   const tab = tabs.find((item) => item.mode === mode);
+  const focused = document.activeElement;
+  const focusWillBeHidden = tabs.some((item) => item !== tab && item.panel.contains(focused));
   selectTab(tab);
 
-  if (switcher.contains(document.activeElement)) {
+  if (switcher.contains(focused) || focusWillBeHidden) {
     tab.link.focus({ preventScroll: true });
   }
 }
@@ -61,6 +63,8 @@ for (const tab of tabs) {
 }
 
 switcher.addEventListener("keydown", (event) => {
+  if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+
   const currentIndex = tabs.findIndex((tab) => tab.link === event.target);
   if (currentIndex === -1) return;
 
