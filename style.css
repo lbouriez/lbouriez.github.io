@@ -139,11 +139,14 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   width: min(78vw, 72dvh, 420px);
   aspect-ratio: 1;
   border-radius: 50%;
+  overflow: hidden;
   box-shadow: 0 0 0 1px rgb(239 178 122 / .65), 0 24px 100px rgb(0 0 0 / .63);
 }
 
-.owl-stage img { display: block; width: 100%; height: 100%; border-radius: 50%; }
-.owl-canvas { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; pointer-events: none; }
+/* Extend both renderers past the circle to crop the artwork's dark matte. */
+.owl-stage > img, .owl-canvas { position: absolute; top: -3%; left: -3%; width: 106%; height: 106%; }
+.owl-stage > img { display: block; }
+.owl-canvas { pointer-events: none; }
 .owl-canvas svg { display: block; }
 
 .owl-close {
