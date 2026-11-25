@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr-CA">
 <head>
   <meta charset="utf-8">
@@ -19,10 +19,10 @@
       </div>
       <nav class="switcher" aria-label="Choisir un volet">
         <a href="#panel-pro" class="mode" data-mode="pro">
-          <span class="mode-icon mode-icon--code" aria-hidden="true">⌘</span> Pro
+          <span class="mode-icon" aria-hidden="true">⌘</span> Pro
         </a>
         <a href="#panel-personnel" class="mode" data-mode="personnel">
-          <span class="mode-icon mode-icon--spark" aria-hidden="true">✦</span> Personnel
+          <span class="mode-icon" aria-hidden="true">✦</span> Personnel
         </a>
       </nav>
     </header>
@@ -33,13 +33,15 @@
         <div class="hero-content">
           <div class="location"><span aria-hidden="true"></span> Montréal, Québec</div>
           <h1 id="name">Laurent <br>Bouriez<span class="period">.</span></h1>
-          <p class="hero-intro" data-intro="pro">
-            DevOps chez <strong>Nectari</strong>. Je travaille sur l’infrastructure cloud,
-            l’automatisation et le développement d’applications.
-          </p>
-          <p class="hero-intro" data-intro="personnel" hidden>
-            En dehors du travail, je partage mes vidéos, ma musique et ce qui m’intéresse.
-          </p>
+          <div class="hero-intros">
+            <p class="hero-intro" data-intro="pro">
+              DevOps chez <strong>Nectari</strong>. Je travaille sur l’infrastructure cloud,
+              l’automatisation et le développement d’applications.
+            </p>
+            <p class="hero-intro" data-intro="personnel" aria-hidden="true">
+              Un aperçu de ce que je fais en dehors du travail.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -47,16 +49,22 @@
         <h2>Profils</h2>
         <ul class="cards cards--two">
           <li>
-            <a class="card" href="https://github.com/lbouriez/">
+            <a class="card" href="https://github.com/lbouriez/" target="_blank" rel="noopener" aria-describedby="new-tab-notice">
               <span class="icon icon--github" aria-hidden="true">&gt;_</span>
-              <span class="card-copy"><strong>GitHub</strong><span>Dépôts et contributions</span></span>
+              <span class="card-copy">
+                <strong>GitHub</strong>
+                <span>Dépôts et contributions</span>
+              </span>
               <span class="arrow" aria-hidden="true">↗</span>
             </a>
           </li>
           <li>
-            <a class="card" href="https://www.linkedin.com/in/lbouriez/">
+            <a class="card" href="https://www.linkedin.com/in/lbouriez/" target="_blank" rel="noopener" aria-describedby="new-tab-notice">
               <span class="icon icon--linkedin" aria-hidden="true">in</span>
-              <span class="card-copy"><strong>LinkedIn</strong><span>Parcours et contact</span></span>
+              <span class="card-copy">
+                <strong>LinkedIn</strong>
+                <span>Parcours et contact</span>
+              </span>
               <span class="arrow" aria-hidden="true">↗</span>
             </a>
           </li>
@@ -64,7 +72,7 @@
         <h2>Projets</h2>
         <ul class="cards cards--two">
           <li>
-            <a class="card card--project" href="https://rekindle-app.com/">
+            <a class="card card--project" href="https://rekindle-app.com/" target="_blank" rel="noopener" aria-describedby="new-tab-notice">
               <img class="project-icon" src="assets/rekindle.webp" alt="" width="50" height="50">
               <span class="card-copy">
                 <strong>ReKindle</strong>
@@ -74,7 +82,7 @@
             </a>
           </li>
           <li>
-            <a class="card card--project" href="https://kidhoot.com/">
+            <a class="card card--project" href="https://kidhoot.com/" target="_blank" rel="noopener" aria-describedby="new-tab-notice">
               <img class="project-icon" src="assets/kidhoot.webp" alt="" width="50" height="50">
               <span class="card-copy">
                 <strong>Kidhoot</strong>
@@ -84,7 +92,7 @@
             </a>
           </li>
           <li>
-            <a class="card card--project" href="https://cadrora.com/">
+            <a class="card card--project" href="https://cadrora.com/" target="_blank" rel="noopener" aria-describedby="new-tab-notice">
               <img class="project-icon" src="assets/cadrora.webp" alt="" width="50" height="50">
               <span class="card-copy">
                 <strong>Cadrora</strong>
@@ -109,29 +117,40 @@
         <h2>Mes liens personnels</h2>
         <ul class="cards cards--three">
           <li>
-            <a class="card card--personal" href="https://www.youtube.com/@laurentb9383">
+            <a class="card" href="https://www.youtube.com/@laurentb9383" target="_blank" rel="noopener" aria-describedby="new-tab-notice">
               <span class="icon icon--youtube" aria-hidden="true"><span></span></span>
-              <span class="card-copy"><strong>YouTube</strong><span>Ma chaîne vidéo</span></span>
+              <span class="card-copy">
+                <strong>YouTube</strong>
+                <span>Ma chaîne vidéo</span>
+              </span>
               <span class="arrow" aria-hidden="true">↗</span>
             </a>
           </li>
           <li>
-            <a class="card card--personal" href="https://soundcloud.com/zelolo14">
+            <a class="card" href="https://soundcloud.com/zelolo14" target="_blank" rel="noopener" aria-describedby="new-tab-notice">
               <span class="icon icon--soundcloud" aria-hidden="true">♫</span>
-              <span class="card-copy"><strong>SoundCloud</strong><span>Mes créations musicales</span></span>
+              <span class="card-copy">
+                <strong>SoundCloud</strong>
+                <span>Mes créations musicales</span>
+              </span>
               <span class="arrow" aria-hidden="true">↗</span>
             </a>
           </li>
           <li>
-            <a class="card card--personal" href="https://x.com/WeeBoo">
+            <a class="card" href="https://x.com/WeeBoo" target="_blank" rel="noopener" aria-describedby="new-tab-notice">
               <span class="icon icon--x" aria-hidden="true">𝕏</span>
-              <span class="card-copy"><strong>X</strong><span>Mes publications</span></span>
+              <span class="card-copy">
+                <strong>X</strong>
+                <span>Mes publications</span>
+              </span>
               <span class="arrow" aria-hidden="true">↗</span>
             </a>
           </li>
         </ul>
       </section>
     </main>
+
+    <span id="new-tab-notice" hidden>S’ouvre dans un nouvel onglet.</span>
   </div>
 </body>
 </html>

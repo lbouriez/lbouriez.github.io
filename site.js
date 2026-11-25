@@ -1,82 +1,83 @@
 const switcher = document.querySelector(".switcher");
-const tabs = Array.from(switcher.querySelectorAll("[data-mode]"));
+const tabs = Array.from(switcher.querySelectorAll("[data-mode]"), (link) => ({
+  link,
+  mode: link.dataset.mode,
+  panel: document.getElementById(link.hash.slice(1)),
+}));
+const introductions = document.querySelectorAll("[data-intro]");
+const personalHashes = new Set(["#personnel", "#panel-personnel", "#creation", "#panel-creation"]);
 
-switcher.setAttribute("role", "tablist");
+function selectTab(activeTab) {
+  document.documentElement.dataset.mode = activeTab.mode;
 
-for (const tab of tabs) {
-  const mode = tab.dataset.mode;
-  const panel = document.getElementById("panel-" + mode);
+  for (const tab of tabs) {
+    const selected = tab === activeTab;
+    tab.link.setAttribute("aria-selected", String(selected));
+    tab.link.tabIndex = selected ? 0 : -1;
+    tab.panel.hidden = !selected;
+  }
 
-  tab.id = "tab-" + mode;
-  tab.setAttribute("role", "tab");
-  tab.setAttribute("aria-controls", panel.id);
-
-  panel.setAttribute("role", "tabpanel");
-  panel.setAttribute("aria-labelledby", tab.id);
-  panel.tabIndex = 0;
-
-  tab.addEventListener("click", (event) => {
-    event.preventDefault();
-    activateTab(tab, true);
-  });
+  for (const intro of introductions) {
+    intro.setAttribute("aria-hidden", String(intro.dataset.intro !== activeTab.mode));
+  }
 }
 
-function activateTab(selectedTab, updateUrl) {
-  const mode = selectedTab.dataset.mode;
+function navigateToTab(tab) {
+  selectTab(tab);
 
-  document.documentElement.dataset.mode = mode;
-  for (const tab of tabs) {
-    const isSelected = tab === selectedTab;
-    tab.setAttribute("aria-selected", String(isSelected));
-    tab.tabIndex = isSelected ? 0 : -1;
-    document.getElementById(tab.getAttribute("aria-controls")).hidden = !isSelected;
-  }
-
-  for (const intro of document.querySelectorAll("[data-intro]")) {
-    intro.hidden = intro.dataset.intro !== mode;
-  }
-
-  const hash = mode === "personnel" ? "#personnel" : "";
-  if (updateUrl && location.hash !== hash) {
-    const targetUrl = new URL(location.href);
-    targetUrl.hash = hash;
-    history.pushState(null, "", targetUrl);
+  const nextUrl = new URL(location.href);
+  nextUrl.hash = tab.mode === "personnel" ? "#personnel" : "";
+  if (nextUrl.href !== location.href) {
+    history.pushState(null, "", nextUrl);
   }
 }
 
 function syncFromLocation() {
-  const personalHashes = ["#personnel", "#panel-personnel", "#creation", "#panel-creation"];
-  const mode = personalHashes.includes(location.hash) ? "personnel" : "pro";
-  const selectedTab = tabs.find((tab) => tab.dataset.mode === mode);
-  const focusWasOnTab = tabs.includes(document.activeElement);
-  activateTab(selectedTab, false);
+  const mode = personalHashes.has(location.hash) ? "personnel" : "pro";
+  const tab = tabs.find((item) => item.mode === mode);
+  selectTab(tab);
 
-  if (focusWasOnTab) {
-    selectedTab.focus({ preventScroll: true });
+  if (switcher.contains(document.activeElement)) {
+    tab.link.focus({ preventScroll: true });
   }
 }
 
+switcher.setAttribute("role", "tablist");
+
+for (const tab of tabs) {
+  const { link, mode, panel } = tab;
+  link.id = "tab-" + mode;
+  link.setAttribute("role", "tab");
+  link.setAttribute("aria-controls", panel.id);
+
+  panel.setAttribute("role", "tabpanel");
+  panel.setAttribute("aria-labelledby", link.id);
+  panel.tabIndex = 0;
+
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    navigateToTab(tab);
+  });
+}
+
 switcher.addEventListener("keydown", (event) => {
-  const currentIndex = tabs.indexOf(event.target);
+  const currentIndex = tabs.findIndex((tab) => tab.link === event.target);
   if (currentIndex === -1) return;
 
-  const nextIndex = {
+  const destinationIndex = {
     ArrowLeft: (currentIndex + tabs.length - 1) % tabs.length,
     ArrowRight: (currentIndex + 1) % tabs.length,
     Home: 0,
     End: tabs.length - 1,
+    " ": currentIndex,
   }[event.key];
+  if (destinationIndex === undefined) return;
 
-  if (nextIndex !== undefined) {
-    event.preventDefault();
-    tabs[nextIndex].focus();
-    activateTab(tabs[nextIndex], true);
-  } else if (event.key === " ") {
-    event.preventDefault();
-    activateTab(tabs[currentIndex], true);
-  }
+  event.preventDefault();
+  const destination = tabs[destinationIndex];
+  destination.link.focus({ preventScroll: true });
+  navigateToTab(destination);
 });
 
-window.addEventListener("popstate", syncFromLocation);
 window.addEventListener("hashchange", syncFromLocation);
 syncFromLocation();

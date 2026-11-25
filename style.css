@@ -8,6 +8,7 @@
 
 :root {
   color-scheme: dark;
+  scrollbar-gutter: stable;
   --background: #101119;
   --surface: #191b25;
   --surface-hover: #202331;
@@ -47,7 +48,6 @@ body {
 }
 
 a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
-[hidden] { display: none !important; }
 
 :focus-visible {
   outline: 2px solid var(--accent);
@@ -107,7 +107,6 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   white-space: nowrap;
   font-size: .87rem;
   font-weight: 650;
-
 }
 
 .mode:hover { background-color: var(--surface-hover); color: var(--text); }
@@ -131,9 +130,12 @@ a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transpar
   z-index: -1;
   inset: 0 0 0 30%;
   background:
+    var(--hero-gradient),
+    var(--hero-art) var(--hero-position) / cover no-repeat;
+  --hero-gradient:
     linear-gradient(90deg, var(--hero-base) 0%, transparent 40%),
-    linear-gradient(0deg, rgb(8 8 12 / .28), transparent 35%),
-    var(--hero-art) center right / cover no-repeat;
+    linear-gradient(0deg, rgb(8 8 12 / .28), transparent 35%);
+  --hero-position: center right;
 }
 
 .hero-content {
@@ -174,7 +176,11 @@ h1 {
 
 .period { color: var(--accent); }
 
+/* Both introductions occupy the same grid cell to reserve space for the longer one. */
+.hero-intros { display: grid; }
+
 .hero-intro {
+  grid-area: 1 / 1;
   max-width: 368px;
   margin: 0;
   color: var(--muted);
@@ -183,6 +189,7 @@ h1 {
   text-wrap: pretty;
 }
 
+.hero-intro[aria-hidden="true"] { visibility: hidden; }
 .hero-intro strong { color: var(--text); font-weight: 650; }
 
 .panel { padding-top: 31px; }
@@ -211,7 +218,7 @@ h2 {
   display: flex;
   align-items: center;
   height: 100%;
-  min-height: 75px;
+  min-height: 91px;
   padding: 12px 17px;
   gap: 14px;
   border: 1px solid var(--line);
@@ -224,7 +231,6 @@ a.card {
 }
 
 a.card:hover { border-color: var(--accent); background: var(--surface-hover); }
-.card--project, .card--personal { min-height: 91px; }
 
 .card-copy {
   display: flex;
@@ -316,7 +322,6 @@ a.card:hover .arrow { transform: translate(2px, -2px); }
   .hero-content { width: 65%; padding-left: 34px; }
   .hero-art { left: 25%; }
   .cards--three { grid-template-columns: 1fr; }
-  .card--personal { min-height: 75px; }
 }
 
 @media (max-width: 560px) {
@@ -329,10 +334,10 @@ a.card:hover .arrow { transform: translate(2px, -2px); }
   .hero { min-height: 388px; align-items: end; border-radius: 21px; }
   .hero-art {
     inset: 0 0 0 9%;
-    background:
+    --hero-gradient:
       linear-gradient(0deg, var(--hero-base) 0%, var(--hero-base) 22%, transparent 91%),
-      linear-gradient(90deg, var(--hero-base) 0%, transparent 90%),
-      var(--hero-art) top right / cover no-repeat;
+      linear-gradient(90deg, var(--hero-base) 0%, transparent 90%);
+    --hero-position: top right;
   }
   .hero-content { width: 100%; padding: 82px 23px 31px; }
   .location { font-size: .65rem; }
